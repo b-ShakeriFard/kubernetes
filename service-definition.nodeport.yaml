@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata: 
+  name: service-type-name-app-name
+spec:
+  type: Nodeport or ClusterIP
+  ports:
+    - port: specify which port on the service object you wish to use
+      targetPort: specify the port on the container which is open for communication
+      nodePort: specify a port number between 30,000 to 32,767
+  selector:
+    here, you specify the data under "labels:" which was under "metadata" 
+    app: 
+    type:
