@@ -1,5 +1,8 @@
 ✅ Commonly Used kubectl Commands
-📄 Get Information
+<br>
+
+📄 Get Information <br>
+
 kubectl get – List resources (pods, services, deployments, etc.)
 
 kubectl describe – Detailed info about a resource
@@ -8,10 +11,10 @@ kubectl logs – View logs of a pod
 
 kubectl top – Show resource usage (CPU, memory)
 
-🚀 Create & Modify Resources
-kubectl create – Create a resource from command or file
+🚀 Create & Modify Resources <br>
+kubectl create | Create a resource from command or file
 
-kubectl apply – Apply changes from a manifest (preferred for GitOps)
+kubectl apply | Apply changes from a manifest (preferred for GitOps)
 
 kubectl edit – Edit a running resource in-place
 
