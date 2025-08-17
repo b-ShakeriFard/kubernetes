@@ -89,7 +89,7 @@ Next, apply the changes like so: <br>
 
 <hr>
 
-# STEP FOUR - DISABLE SWAP
+## STEP FOUR - DISABLE SWAP
 
 We need to do this! <br>
 `sudo swapoff -a || true`
@@ -106,7 +106,7 @@ Persist across reboots <br>
 - -i → in-place edit (modifies the file directly).
 
 
-# STEP FIVE - INSTALL CONTAINERD
+## STEP FIVE - INSTALL CONTAINERD
 
 Add Docker CE Repository <br>
 `sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo`
@@ -151,7 +151,7 @@ sudo sed -ri \
 
 [!Tip] ### It is important to make this change in `/etc/containerd/config.toml` file - changing SystemdCgroup from false to true!
 
-### Now, let's enable, start, and reboot the system!
+#### Now, let's enable, start, and reboot the system!
 `sudo systemctl enable --now containerd.service`
 
 <br>
@@ -162,7 +162,7 @@ sudo sed -ri \
 #### check the status
 `sudo systemctl status containerd.service`
 
-# STEP SIX - SET FIREWALL RULES
+## STEP SIX - SET FIREWALL RULES
 
 self-explanatory! <br>
 
@@ -190,7 +190,7 @@ sudo firewall-cmd --zone=public --permanent --add-port=5473/tcp
 `sudo firewall-cmd --reload`
 
 
-# STEP SEVEN - INSTALL KUBERNETES COMPONENETS
+## STEP SEVEN - INSTALL KUBERNETES COMPONENETS
 
 ### Add Kubernetes Repository
 
@@ -226,7 +226,7 @@ provided by the Kubernetes control plane. <br>
 Up until this point of the installation process, we’ve installed and configured <br>
 Kubernetes components on all nodes. From this point on-ward, we will focus on the master node. <br>
 
-# STEP EIGHT - INITIALIZING KUBERNETES CONTROL PLANE
+## STEP EIGHT - INITIALIZING KUBERNETES CONTROL PLANE
 
 Take a guess! We need some images:
 `sudo kubeadm config images pull`
@@ -271,3 +271,75 @@ Then you can join any number of worker nodes by running the following on each as
 kubeadm join 192.168.1.26:6789 --token y8cow4.jib2syhyrb0bh1dt \
 	--discovery-token-ca-cert-hash sha256:cb67fddec41469cf1f495db34008ae1a41d3f24ce418b46d5aefb262a1721f43
 ```
+
+### Set Up kubeconfig File
+```bash
+mkdir -p $HOME/.kube
+sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+sudo chown $(id -u):$(id -g) $HOME/.kube/config
+```
+
+### Deploy Pod Network
+`kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/tigera-operator.yaml`
+
+For this example, we will use tigera-operator. But this is only one of many solutions. <br>
+Once you get the content of the file (which is used to create a kubernetes object within it's <br>
+own namespace) you will have the privillege to read (receive) these messages:
+
+```bash
+namespace/tigera-operator created
+customresourcedefinition.apiextensions.k8s.io/bgpconfigurations.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/bgpfilters.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/bgppeers.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/blockaffinities.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/caliconodestatuses.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/clusterinformations.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/felixconfigurations.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/globalnetworkpolicies.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/globalnetworksets.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/hostendpoints.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/ipamblocks.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/ipamconfigs.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/ipamhandles.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/ippools.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/ipreservations.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/kubecontrollersconfigurations.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/networkpolicies.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/networksets.crd.projectcalico.org created
+customresourcedefinition.apiextensions.k8s.io/apiservers.operator.tigera.io created
+customresourcedefinition.apiextensions.k8s.io/imagesets.operator.tigera.io created
+customresourcedefinition.apiextensions.k8s.io/installations.operator.tigera.io created
+customresourcedefinition.apiextensions.k8s.io/tigerastatuses.operator.tigera.io created
+serviceaccount/tigera-operator created
+clusterrole.rbac.authorization.k8s.io/tigera-operator created
+clusterrolebinding.rbac.authorization.k8s.io/tigera-operator created
+deployment.apps/tigera-operator created
+```
+
+Now, you are the master of your own single-node kubernetes cluster! <br>
+So use your powers wisely!
+
+<hr>
+
+### But...
+We are not done yet. Do this: <br>
+`wget https://raw.githubusercontent.com/projectcalico/calico/v3.26.1/manifests/custom-resources.yaml`
+
+<br>
+Adjust the CIDR <br>
+`sed -i 's/cidr: 192\.168\.0\.0\/16/cidr: 10.244.0.0\/16/g' custom-resources.yaml`
+
+<br>
+### Finally... <br>
+Create the Calico custom resource:
+
+`kubectl create -f custom-resources.yaml`
+
+#Boom!
+Now You may enjoy your single-node application platform, managed by kubernetes! <br>
+
+You're welcome! <br>
+
+Also, thank this guy:
+
+Reference: https://infotechys.com/install-a-kubernetes-cluster-on-rhel-9/
