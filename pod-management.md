@@ -2,7 +2,7 @@
 
 <h4> Create a Pod </h4>
 
-# kubectl run <pod-name> --image=nginx --restart=Never
+### kubectl run <pod-name> --image=nginx --restart=Never
 # Pod management
 
 > Manage individual Pods for dev/test scenarios. For production, prefer Deployments/StatefulSets.
@@ -39,4 +39,39 @@ kubectl run api --image=nginx --restart=Never \
   --requests=cpu=200m,memory=128Mi \
   --limits=cpu=500m,memory=256Mi \
   --labels=app=api,env=dev
+
+# More Options
+```bash
+# Annotations
+kubectl run web --image=nginx --restart=Never \
+  --annotations=owner=behroox,team=platform
+
+# Target a node (via overrides)
+kubectl run diag --image=nginx --restart=Never \
+  --overrides='{"spec":{"nodeSelector":{"kubernetes.io/hostname":"worker-1"}}}'
+
+# Generate YAML only
+kubectl run demo --image=nginx --restart=Never --dry-run=client -o yaml
+
+# Minimal Pod YAML
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-pod
+  labels:
+    app: demo
+spec:
+  containers:
+  - name: app
+    image: nginx:1.25
+    ports:
+    - containerPort: 80
+    readinessProbe:
+      httpGet: { path: /, port: 80 }
+      initialDelaySeconds: 5
+      periodSeconds: 5
+    livenessProbe:
+      httpGet: { path: /, port: 80 }
+      initialDelaySeconds: 10
+      periodSeconds: 10
 
