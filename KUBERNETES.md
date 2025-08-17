@@ -69,37 +69,24 @@ kubectl auth – Check access rules (e.g., can-i)
 
 ## Main Commands for kubernetes:
 
-1. Inspect & view
+### 1. Inspect & view
+- get → list resources (kubectl get pods)
+- describe → detailed info (kubectl describe pod mypod)
+- logs → container logs (kubectl logs mypod)
+- top → resource usage (needs metrics-server)
 
-get → list resources (kubectl get pods)
+### 2. Create & update
+- create → new resource from CLI or file (kubectl create deploy)
+- apply → apply config file declaratively
+- replace → replace from file
+- edit → edit live resource in $EDITOR
+- set → update fields (e.g., set image, set resources)
+- scale → adjust replicas
+- annotate → add/update annotations
+- label → add/update labels
+- patch → apply partial changes
 
-describe → detailed info (kubectl describe pod mypod)
-
-logs → container logs (kubectl logs mypod)
-
-top → resource usage (needs metrics-server)
-
-2. Create & update
-
-create → new resource from CLI or file (kubectl create deploy)
-
-apply → apply config file declaratively
-
-replace → replace from file
-
-edit → edit live resource in $EDITOR
-
-set → update fields (e.g., set image, set resources)
-
-scale → adjust replicas
-
-annotate → add/update annotations
-
-label → add/update labels
-
-patch → apply partial changes
-
-3. Delete & clean up
+### 3. Delete & clean up
 
 delete → delete resources
 
