@@ -1,4 +1,4 @@
-# Kubernetes Installatiom
+# Kubernetes Installation
 This installation method has been tested on CentOS9
 and it works well!
 
@@ -7,7 +7,7 @@ and it works well!
 kernel-devel is the package that contains header files and source code needed to <br>
 build kernel modules. It’s a way to make sure your kernel headers match your <br>
 currently running kernel so that module compilation succeeds without <br>
-version mismatch errors.
+version mismatch errors. <br>
 <br>
 `sudo dnf install kernel-devel-$(uname -r)`
 
@@ -20,13 +20,14 @@ Linux bridges (which Kubernetes CNIs use to connect pods). <br>
 <br>
 `sudo modprobe br_netfilter`
 
-Let's load IP Virtual Server core modules
-IPVS is a kernel-level load balancer.
+Let's load IP Virtual Server core modules <br>
+IPVS is a kernel-level load balancer. <br>
 <br>
 `sudo modprobe iv_vs`
 
-# Let's load the Round-Robin scheduler for IPVS.
-# Round Robin distributes connections evenly across all backend pods.
+#### Let's load the Round-Robin scheduler for IPVS.
+Round Robin distributes connections evenly across all backend pods. <br>
+<br>
 sudo modprobe ip_vs_rr
 
 # Let's load the Weighted Round-Robin scheduler for IPVS.
