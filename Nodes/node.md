@@ -5,12 +5,13 @@ Most basic command:
 kubectl get nodes -o wide
 ```
 
-Contents
-[Jump to:](#) [Cheatsheet](#cheatsheet) <br>
+Contents <br>
+[Jump to:](#) <br> 
+• [Cheatsheet](#cheatsheet) <br>
 • [Tips](#) <br>
 • [Examples](#minimal-pod-yaml) <br>
-• [Warnings](#Warnings)
-• [Troubleshooting](#troubleshooting)
+• [Warnings](#Warnings) <br>
+• [Troubleshooting](#troubleshooting) <br>
 
 ### CheatSheet
 
@@ -22,18 +23,18 @@ Contents
 |`kubectl describe node <node>`                 |# conditions, capacity/allocatable, taints |
 |`kubectl top node`                             |# needs metrics-server |
 
-# Schedule control <br>
-kubectl cordon <node>                        # mark unschedulable (no new Pods)
-kubectl uncordon <node>                      # allow scheduling again
-kubectl drain <node> --ignore-daemonsets --delete-emptydir-data
-                                             # evict Pods safely for maintenance
-# Labels (for selectors/affinity)
-kubectl label node <node> role=db            # add
-kubectl label node <node> role-              # remove key 'role'
+| Schedule control | - |
+| `kubectl cordon <node>`                       |# mark unschedulable (no new Pods) |
+| `kubectl uncordon <node> `                    |# allow scheduling again |
+| `kubectl drain <node> --ignore-daemonsets --delete-emptydir-data` | # evict Pods safely for maintenance |
 
-# Taints (for controlled placement)
-kubectl taint node <node> env=prod:NoSchedule
-kubectl taint node <node> env-               # remove taint key 'env'
+| Labels (for selectors/affinity) | - |
+| `kubectl label node <node> role=db`           | # add|
+| `kubectl label node <node> role- `            | # remove key 'role' |
+
+| Taints (for controlled placement) | - |
+| `kubectl taint node <node> env=prod:NoSchedule` | - |
+| `kubectl taint node <node> env-               | # remove taint key 'env'|
 
 # Quick views
 kubectl get nodes -L role                    # show label column
