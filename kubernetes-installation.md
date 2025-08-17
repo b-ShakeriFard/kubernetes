@@ -51,6 +51,7 @@ filesystem layers — crucial for container images. <br>
 <hr>
 Next, we will now add these to our kubernetes.conf file!<br>
 <br>
+
 ```bash
 cat > /etc/modules-load.d/kubernetes.conf << EOF
 br_netfilter
@@ -87,6 +88,7 @@ Next, apply the changes like so: <br>
 `sysctl --system`
 
 <hr>
+
 # STEP FOUR - DISABLE SWAP
 
 We need to do this! <br>
@@ -103,7 +105,6 @@ Persist across reboots <br>
 - g → global flag (applies the substitution to all matches in the line, though here it’s redundant because ^ matches only once).
 - -i → in-place edit (modifies the file directly).
 
-<hr>
 
 # STEP FIVE INSTALL CONTAINERD
 
