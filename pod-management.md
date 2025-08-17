@@ -22,6 +22,8 @@ kubectl run <pod-name> --image=nginx --restart=Never
 | Shell into container | `kubectl exec -it <pod> -- sh` |
 | Logs (follow) | `kubectl logs -f <pod> [-c <container>]` |
 | Port-forward | `kubectl port-forward pod/<pod> 8080:80` |
+| expose a pod | 'kubectl expose pod my-pod --port=80 --type=ClusterIP --name=my-pod-svc
+' |
 | Delete (graceful) | `kubectl delete pod <pod>` |
 | Generate YAML | `kubectl run web --image=nginx --dry-run=client -o yaml` |
 
