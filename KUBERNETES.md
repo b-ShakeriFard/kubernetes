@@ -1,7 +1,7 @@
-✅ # Commonly Used kubectl Commands
+# ✅ Commonly Used kubectl Commands
 <br>
 
-📄 ## Get Information <br>
+## 📄 Get Information <br>
 ```bash
 kubectl get – List resources (pods, services, deployments, etc.)
 <br>
