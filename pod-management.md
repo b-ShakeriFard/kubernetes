@@ -39,6 +39,7 @@ kubectl run api --image=nginx --restart=Never \
   --requests=cpu=200m,memory=128Mi \
   --limits=cpu=500m,memory=256Mi \
   --labels=app=api,env=dev
+```
 
 # More Options
 ```bash
