@@ -14,11 +14,13 @@ Contents
 
 ### CheatSheet
 
- List & inspect <br>
-`kubectl get nodes`                            # short view
-`kubectl get nodes -o wide`                    # OS, kernel, container runtime, IP
-`kubectl describe node <node>`                 # conditions, capacity/allocatable, taints
-`kubectl top node`                             # needs metrics-server
+| Command | explanation |
+|---------|-------------|
+| List & inspect | - |
+|`kubectl get nodes`                            |# short view |
+|`kubectl get nodes -o wide`                    |# OS, kernel, container runtime, IP |
+|`kubectl describe node <node>`                 |# conditions, capacity/allocatable, taints |
+|`kubectl top node`                             |# needs metrics-server |
 
 # Schedule control <br>
 kubectl cordon <node>                        # mark unschedulable (no new Pods)
