@@ -48,6 +48,7 @@ filesystem layers — crucial for container images. <br>
 `sudo modprobe overlay`
 
 #### Cool - We are now done with loading modules.
+<hr>
 Next, we will now add these to our kubernetes.conf file!<br>
 <br>
 ```bash
@@ -80,37 +81,46 @@ EOF
 | net.bridge.bridge-nf-call-ip6tables | Enables iptables to process bridged IPv6 traffic |
 | net.ipv4.ip_forward	| Enables IPv4 packet forwarding |
 
-# Next, apply the changes like so:
-sysctl --system
+<br>
 
+Next, apply the changes like so: <br>
+`sysctl --system`
+
+<hr>
 # STEP FOUR - DISABLE SWAP
-sudo swapoff -a || true
-# Persist across reboots
-sed -e '/swap/s/^/#/g' -i /etc/fstab
 
-# this line does the following:
-# Find any swap entries in /etc/fstab and comment them out so swap never mounts at startup.
-# sed: stream editor, used to search/replace text.
-# /swap/ Find any line that contains the word swap (case-sensitive).
-# s/^/#/g → "substitute (s) the start of the line (^) with a #", meaning put a # at the beginning (comment it out).
-# g → global flag (applies the substitution to all matches in the line, though here it’s redundant because ^ matches only once).
-# -i → in-place edit (modifies the file directly).
+We need to do this! <br>
+`sudo swapoff -a || true`
+<br>
+Persist across reboots <br>
+`sed -e '/swap/s/^/#/g' -i /etc/fstab`
+
+#### This line does the following:
+- Find any swap entries in /etc/fstab and comment them out so swap never mounts at startup.
+- sed: stream editor, used to search/replace text.
+- /swap/ Find any line that contains the word swap (case-sensitive).
+- s/^/#/g → "substitute (s) the start of the line (^) with a #", meaning put a # at the beginning (comment it out).
+- g → global flag (applies the substitution to all matches in the line, though here it’s redundant because ^ matches only once).
+- -i → in-place edit (modifies the file directly).
+
+<hr>
 
 # STEP FIVE INSTALL CONTAINERD
 
-# Add Docker CE Repository
-sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+Add Docker CE Repository <br>
+`sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo`
 
-# After adding the repository, it’s essential to update the package cache to ensure the latest package information is available:
-sudo dnf makecache
+After adding the repository, it’s essential to update the package cache to ensure the latest package information is available:
+`sudo dnf makecache`
 
-# install containerd.io package
-sudo dnf install containerd.io
+### install containerd.io package
+`sudo dnf install containerd.io`
 
-sudo mkdir -p /etc/containerd
+Now, let's make some preps! <br>
+`sudo mkdir -p /etc/containerd`
 
-# Configure Containerd
-cat /etc/containerd/config.toml
+### Configure Containerd
+`cat /etc/containerd/config.toml`
 
 # After installing Containerd, the next step is to configure it to ensure optimal performance and 
 # compatibility with your environment. The configuration file for Containerd is located at 
