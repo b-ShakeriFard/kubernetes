@@ -91,10 +91,6 @@ kubectl debug <name> -it --image=busybox --target=<container>
 ```
 
 ### Pod Life Cycle
-
-flowchart LR
-  A[Pending] -->|Scheduled| B[Running]
-  B -->|Probes ok| C[Ready]
-  B -->|CrashLoop| D[Restarting]
-  B -->|Delete| E[Terminating]
-
+```bash
+kubectl delete pod <pod-name> --grace-period=0 --force
+```
