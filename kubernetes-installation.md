@@ -106,7 +106,7 @@ Persist across reboots <br>
 - -i → in-place edit (modifies the file directly).
 
 
-# STEP FIVE INSTALL CONTAINERD
+# STEP FIVE - INSTALL CONTAINERD
 
 Add Docker CE Repository <br>
 `sudo dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo`
@@ -123,35 +123,50 @@ Now, let's make some preps! <br>
 ### Configure Containerd
 `cat /etc/containerd/config.toml`
 
-# After installing Containerd, the next step is to configure it to ensure optimal performance and 
-# compatibility with your environment. The configuration file for Containerd is located at 
-# /etc/containerd/config.toml. While the default configuration provides a solid starting point for 
-# most environments, we’ll make a small adjustment to enable Systemd Cgroup support, which is 
-# essential for proper container management. Let’s proceed with configuring Containerd.
+<br>
 
-# Run the following command to build out the containerd configuration file:
-sudo sh -c "containerd config default > /etc/containerd/config.toml" ; cat /etc/containerd/config.toml
+After installing Containerd, the next step is to configure it to ensure optimal performance and <br>
+compatibility with your environment. The configuration file for Containerd is located at <br>
+`/etc/containerd/config.toml`. While the default configuration provides a solid starting point for <br>
+most environments, we’ll make a small adjustment to enable Systemd Cgroup support, which is <br>
+essential for proper container management. Let’s proceed with configuring Containerd. <br>
 
-# Ensure CRI plugin is enabled and systemd cgroups are on
-# (Handles both containerd 1.x and 2.x config layouts)
+<br>
+
+Run the following command to build out the containerd configuration file: <br>
+`sudo sh -c "containerd config default > /etc/containerd/config.toml" ; cat /etc/containerd/config.toml`
+
+<br>
+
+### Ensure CRI plugin is enabled and systemd cgroups are on <br>
+(Handles both containerd 1.x and 2.x config layouts) <br>
+```bash
 sudo sed -ri \
   -e 's/^\s*disabled_plugins\s*=.*/# disabled_plugins = []/' \
   -e 's/(\[plugins\."io\.containerd\.grpc\.v1\.cri"\]\s*)$/\1\nsandbox_image = "registry.k8s.io\/pause:3.10"/' \
   -e 's/(\[plugins\."io\.containerd\.grpc\.v1\.cri"\.containerd\.runtimes\.runc\.options\])/\1\n  SystemdCgroup = true/' \
   -e "s/(\[plugins\.'io\.containerd\.cri\.v1\.runtime'\.containerd\.runtimes\.runc\.options\])/\1\n  SystemdCgroup = true/" \
   /etc/containerd/config.toml
-# It is important to make this change in /etc/containerd/config.toml file - changing SystemdCgroup from false to true!
+```
 
-# Now, let's enable, start, and reboot the system!
-sudo systemctl enable --now containerd.service
+[!Tip] ### It is important to make this change in `/etc/containerd/config.toml` file - changing SystemdCgroup from false to true!
 
-# reboot
-sudo systemctl reboot
+### Now, let's enable, start, and reboot the system!
+`sudo systemctl enable --now containerd.service`
 
-# check the status
-sudo systemctl status containerd.service
+<br>
+
+#### reboot
+`sudo systemctl reboot`
+
+#### check the status
+`sudo systemctl status containerd.service`
 
 # STEP SIX - SET FIREWALL RULES
+
+self-explanatory! <br>
+
+```bash
 sudo firewall-cmd --zone=public --permanent --add-port=6443/tcp
 sudo firewall-cmd --zone=public --permanent --add-port=2379-2380/tcp
 sudo firewall-cmd --zone=public --permanent --add-port=10250/tcp
@@ -159,22 +174,27 @@ sudo firewall-cmd --zone=public --permanent --add-port=10251/tcp
 sudo firewall-cmd --zone=public --permanent --add-port=10252/tcp
 sudo firewall-cmd --zone=public --permanent --add-port=10255/tcp
 sudo firewall-cmd --zone=public --permanent --add-port=5473/tcp
+```
 
-# Port(s)	      Description
-# 6443	        Kubernetes API server
-# 2379-2380	    etcd server client API
-# 10250	        Kubelet API
-# 10251	        kube-scheduler
-# 10252	        kube-controller-manager
-# 10255	        Read-only Kubelet API
-# 5473	        ClusterControlPlaneConfig API
+| Port(s) | Description |
+|---------|-------------|
+| 6443 | Kubernetes API server |
+| 2379-2380	| etcd server client API |
+| 10250	| kubelet API |
+| 10251	| kube-scheduler |
+| 10252	| kube-controller-manager |
+| 10255	| Read-only Kubelet API |
+| 5473 | ClusterControlPlaneConfig API |
 
-# let's reload the firewall
-sudo firewall-cmd --reload
+### let's reload the firewall!
+`sudo firewall-cmd --reload`
+
 
 # STEP SEVEN - INSTALL KUBERNETES COMPONENETS
 
-# Add Kubernetes Repository
+### Add Kubernetes Repository
+
+```bash
 cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -184,11 +204,12 @@ gpgcheck=1
 gpgkey=https://pkgs.k8s.io/core:/stable:/v1.29/rpm/repodata/repomd.xml.key
 exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
+```
 
-# Install Kubernetes Packages
-dnf makecache; dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes
+### Install Kubernetes Packages
+`dnf makecache; dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes`
 
-# Start and Enable kubelet Service
+### Start and Enable kubelet Service
 systemctl enable --now kubelet.service
 
 # Don’t worry about any kubelet errors at this point. Once the worker nodes are 
