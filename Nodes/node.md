@@ -46,12 +46,12 @@ Contents <br>
 | `kubectl get nodes -L role`                   | # show label column |
 | `kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints` | - |
 
-# Tip
+# Tips
 > 💡 **Tip:** 
 Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
 
-# Example
+# Examples
 
 - 1) Prepare a node for DB workloads
  
