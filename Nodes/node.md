@@ -13,7 +13,7 @@ Contents <br>
 • [Warnings](#Warnings) <br>
 • [Troubleshooting](#troubleshooting) <br>
 
-## CheatSheet
+# CheatSheet
 
 ### List & inspect 
 | Command | explanation |
@@ -46,6 +46,36 @@ Contents <br>
 | `kubectl get nodes -L role`                   | # show label column |
 | `kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints` | - |
 
+# Tip
 > 💡 **Tip:** 
 Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
+
+# Example
+
+- 1) Prepare a node for DB workloads
+ 
+ ```bash
+# Label the node and prevent general scheduling
+kubectl label node worker-2 workload=db
+kubectl taint node worker-2 db=true:NoSchedule
+```
+<br>
+Pod spec (schedule only on that node and tolerate the taint):
+
+<br>
+
+```bash
+spec:
+  nodeSelector:
+    workload: db
+  tolerations:
+  - key: "db"
+    operator: "Equal"
+    value: "true"
+    effect: "NoSchedule"
+```
+
+<br>
+
+- 2) Safe node maintenance
