@@ -8,6 +8,7 @@ kernel-devel is the package that contains header files and source code needed to
 build kernel modules. It’s a way to make sure your kernel headers match your 
 currently running kernel so that module compilation succeeds without 
 version mismatch errors.
+<br>
 `sudo dnf install kernel-devel-$(uname -r)`
 
 <hr>
