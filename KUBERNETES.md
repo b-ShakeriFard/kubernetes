@@ -1,5 +1,8 @@
-# ✅ Commonly Used kubectl Commands
-<br>
+## 'kubectl' CLI Structure
+
+```bash
+kubectl [command] [TYPE] [NAME] [flags]
+```
 
 ## 📄 Get Information <br>
 ```bash
