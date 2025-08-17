@@ -53,7 +53,10 @@ kubectl run diag --image=nginx --restart=Never \
 # Generate YAML only
 kubectl run demo --image=nginx --restart=Never --dry-run=client -o yaml
 
+```
+
 # Minimal Pod YAML
+```bash
 apiVersion: v1
 kind: Pod
 metadata:
@@ -74,4 +77,5 @@ spec:
       httpGet: { path: /, port: 80 }
       initialDelaySeconds: 10
       periodSeconds: 10
+```
 
