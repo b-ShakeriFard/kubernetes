@@ -2,7 +2,7 @@
 This installation method has been tested on CentOS9
 and it works well!
 
-### STEP ONE- INSTALL KERNEL HEADERS
+### STEP ONE - INSTALL KERNEL HEADERS
 
 kernel-devel is the package that contains header files and source code needed to <br>
 build kernel modules. It’s a way to make sure your kernel headers match your <br>
@@ -63,7 +63,7 @@ overlay
 EOF
 ```
 
-# STEP THREE - CONFIGURE SYSCTL
+## STEP THREE - CONFIGURE SYSCTL
 To set specific sysctl settings (on each node) that Kubernetes relies on, you can <br>
 update the system’s kernel parameters. These settings ensure optimal performance and <br>
 compatibility for Kubernetes. Here’s how you can configure the necessary sysctl settings: <br>
@@ -186,7 +186,7 @@ sudo firewall-cmd --zone=public --permanent --add-port=5473/tcp
 | 10255	| Read-only Kubelet API |
 | 5473 | ClusterControlPlaneConfig API |
 
-### let's reload the firewall!
+#### Let's reload the firewall!
 `sudo firewall-cmd --reload`
 
 
@@ -206,38 +206,68 @@ exclude=kubelet kubeadm kubectl cri-tools kubernetes-cni
 EOF
 ```
 
-### Install Kubernetes Packages
+#### Install Kubernetes Packages
 `dnf makecache; dnf install -y kubelet kubeadm kubectl --disableexcludes=kubernetes`
 
-### Start and Enable kubelet Service
-systemctl enable --now kubelet.service
+#### Start and Enable kubelet Service
+`systemctl enable --now kubelet.service`
 
-# Don’t worry about any kubelet errors at this point. Once the worker nodes are 
-# successfully joined to the Kubernetes cluster using the provided join command, 
-# the kubelet.service on each worker node will automatically activate and start 
-# communicating with the control plane. The kubelet is responsible for managing 
-# the containers on the node and ensuring that they run according to the specifications 
-# provided by the Kubernetes control plane.
+<hr>
 
-# Up until this point of the installation process, we’ve installed and configured 
-# Kubernetes components on all nodes. From this point onward, we will focus on the master node.
+Don’t worry about any kubelet errors at this point. Once the worker nodes are <br>
+successfully joined to the Kubernetes cluster using the provided join command, <br>
+the kubelet.service on each worker node will automatically activate and start <br>
+communicating with the control plane. The kubelet is responsible for managing <br>
+the containers on the node and ensuring that they run according to the specifications <br>
+provided by the Kubernetes control plane. <br>
+
+<hr>
+
+Up until this point of the installation process, we’ve installed and configured <br>
+Kubernetes components on all nodes. From this point on-ward, we will focus on the master node. <br>
 
 # STEP EIGHT - INITIALIZING KUBERNETES CONTROL PLANE
-sudo kubeadm config images pull
 
-# [config/images] Pulled registry.k8s.io/kube-apiserver:v1.29.3
-# [config/images] Pulled registry.k8s.io/kube-controller-manager:v1.29.3
-# [config/images] Pulled registry.k8s.io/kube-scheduler:v1.29.3
-# [config/images] Pulled registry.k8s.io/kube-proxy:v1.29.3
-# [config/images] Pulled registry.k8s.io/coredns/coredns:v1.11.1
-# [config/images] Pulled registry.k8s.io/pause:3.9
-# [config/images] Pulled registry.k8s.io/etcd:3.5.12-0
+Take a guess! We need some images:
+`sudo kubeadm config images pull`
 
-# After executing this command, Kubernetes will pull the necessary container images 
-# from the default container registry (usually Docker Hub) and store them locally 
-# on the machine. This step is typically performed before initializing the Kubernetes cluster 
-# to ensure that all required images are available locally and can be used without relying on an 
-# external registry during cluster setup.
+```bash
+[config/images] Pulled registry.k8s.io/kube-apiserver:v1.29.3
+[config/images] Pulled registry.k8s.io/kube-controller-manager:v1.29.3
+[config/images] Pulled registry.k8s.io/kube-scheduler:v1.29.3
+[config/images] Pulled registry.k8s.io/kube-proxy:v1.29.3
+[config/images] Pulled registry.k8s.io/coredns/coredns:v1.11.1
+[config/images] Pulled registry.k8s.io/pause:3.9
+[config/images] Pulled registry.k8s.io/etcd:3.5.12-0
+```
 
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+After executing this command, Kubernetes will pull the necessary container images <br>
+from the default container registry (usually Docker Hub) and store them locally <br>
+on the machine. This step is typically performed before initializing the Kubernetes cluster <br>
+to ensure that all required images are available locally and can be used without relying on an <br>
+external registry during cluster setup. <br>
 
+`sudo kubeadm init --pod-network-cidr=10.244.0.0/16`
+
+```bash
+Your Kubernetes control-plane has initialized successfully!
+
+To start using your cluster, you need to run the following as a regular user:
+
+  mkdir -p $HOME/.kube
+  sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+Alternatively, if you are the root user, you can run:
+
+  export KUBECONFIG=/etc/kubernetes/admin.conf
+
+You should now deploy a pod network to the cluster.
+Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
+  https://kubernetes.io/docs/concepts/cluster-administration/addons/
+
+Then you can join any number of worker nodes by running the following on each as root:
+
+kubeadm join 192.168.1.26:6789 --token y8cow4.jib2syhyrb0bh1dt \
+	--discovery-token-ca-cert-hash sha256:cb67fddec41469cf1f495db34008ae1a41d3f24ce418b46d5aefb262a1721f43
+```
