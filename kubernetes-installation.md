@@ -14,13 +14,13 @@ version mismatch errors. <br>
 <hr>
 
 ### STEP TWO - ADD KERNEL MODULES
-Let's load bridge netfilter module <br>
+#### Let's load bridge netfilter module <br>
 This lets iptables inspect and filter traffic passing through <br>
 Linux bridges (which Kubernetes CNIs use to connect pods). <br>
 <br>
 `sudo modprobe br_netfilter`
 
-Let's load IP Virtual Server core modules <br>
+#### Let's load IP Virtual Server core modules <br>
 IPVS is a kernel-level load balancer. <br>
 <br>
 `sudo modprobe iv_vs`
@@ -28,23 +28,29 @@ IPVS is a kernel-level load balancer. <br>
 #### Let's load the Round-Robin scheduler for IPVS.
 Round Robin distributes connections evenly across all backend pods. <br>
 <br>
-sudo modprobe ip_vs_rr
+`sudo modprobe ip_vs_rr`
 
-# Let's load the Weighted Round-Robin scheduler for IPVS.
-# Same as RR, but lets you give more traffic to certain pods (weights).
-sudo modprobe ip_vs_wrr
+#### Let's load the Weighted Round-Robin scheduler for IPVS.
+Same as RR, but lets you give more traffic to certain pods (weights). <br>
+<br>
+`sudo modprobe ip_vs_wrr`
 
-# Let's load the Source Hashing scheduler for IPVS.
-# Uses the client’s IP to always map them to the same backend pod (good for session stickiness).
-sudo modprobe ip_vs_sh
+#### Let's load the Source Hashing scheduler for IPVS.
+Uses the client’s IP to always map them to the same backend pod (good for session stickiness). <br>
+<br>
+`sudo modprobe ip_vs_sh`
 
-# Let's load the overlay filesystem module.
-# OverlayFS lets container runtimes (like containerd, Docker, CRI-O) stack multiple 
-# filesystem layers — crucial for container images.
-sudo modprobe overlay
+#### Let's load the overlay filesystem module.
+OverlayFS lets container runtimes (like containerd, Docker, CRI-O) stack multiple <br>
+filesystem layers — crucial for container images. <br>
+<br>
 
-# Cool - We are now done with loading modules.
-# Next, we will now add these to our kubernetes.conf file!
+`sudo modprobe overlay`
+
+#### Cool - We are now done with loading modules.
+Next, we will now add these to our kubernetes.conf file!<br>
+<br>
+```bash
 cat > /etc/modules-load.d/kubernetes.conf << EOF
 br_netfilter
 ip_vs
@@ -53,19 +59,22 @@ ip_vs_wrr
 ip_vs_sh
 overlay
 EOF
+```
 
 # STEP THREE - CONFIGURE SYSCTL
-# To set specific sysctl settings (on each node) that Kubernetes relies on, you can 
-# update the system’s kernel parameters. These settings ensure optimal performance and 
-# compatibility for Kubernetes. Here’s how you can configure the necessary sysctl settings:
+To set specific sysctl settings (on each node) that Kubernetes relies on, you can <br>
+update the system’s kernel parameters. These settings ensure optimal performance and <br>
+compatibility for Kubernetes. Here’s how you can configure the necessary sysctl settings: <br>
 
+```bash
 cat > /etc/sysctl.d/kubernetes.conf << EOF
 net.ipv4.ip_forward = 1
 net.bridge.bridge-nf-call-ip6tables = 1
 net.bridge.bridge-nf-call-iptables = 1
 EOF
+```
 
-# Kernel Parameter	                        # Description
+| Kernel Parameter|	                         Description |
 # net.bridge.bridge-nf-call-iptables	      Enables iptables to process bridged IPv4 traffic.
 # net.bridge.bridge-nf-call-ip6tables	      Enables iptables to process bridged IPv6 traffic.
 # net.ipv4.ip_forward	                      Enables IPv4 packet forwarding.
