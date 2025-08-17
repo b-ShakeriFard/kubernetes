@@ -4,9 +4,9 @@ and it works well!
 
 ### STEP ONE- INSTALL KERNEL HEADERS
 
-kernel-devel is the package that contains header files and source code needed to
-build kernel modules. It’s a way to make sure your kernel headers match your 
-currently running kernel so that module compilation succeeds without 
+kernel-devel is the package that contains header files and source code needed to <br>
+build kernel modules. It’s a way to make sure your kernel headers match your <br>
+currently running kernel so that module compilation succeeds without <br>
 version mismatch errors.
 <br>
 `sudo dnf install kernel-devel-$(uname -r)`
@@ -14,9 +14,9 @@ version mismatch errors.
 <hr>
 
 ### STEP TWO - ADD KERNEL MODULES
-Let's load bridge netfilter module
-This lets iptables inspect and filter traffic passing through 
-Linux bridges (which Kubernetes CNIs use to connect pods).
+Let's load bridge netfilter module <br>
+This lets iptables inspect and filter traffic passing through <br>
+Linux bridges (which Kubernetes CNIs use to connect pods). <br>
 <br>
 `sudo modprobe br_netfilter`
 
