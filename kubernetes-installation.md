@@ -75,9 +75,10 @@ EOF
 ```
 
 | Kernel Parameter | Description |
+| -----------------|-------------|
 | net.bridge.bridge-nf-call-iptables | Enables iptables to process bridged IPv4 traffic |
-# net.bridge.bridge-nf-call-ip6tables	      Enables iptables to process bridged IPv6 traffic.
-# net.ipv4.ip_forward	                      Enables IPv4 packet forwarding.
+| net.bridge.bridge-nf-call-ip6tables | Enables iptables to process bridged IPv6 traffic |
+| net.ipv4.ip_forward	| Enables IPv4 packet forwarding |
 
 # Next, apply the changes like so:
 sysctl --system
