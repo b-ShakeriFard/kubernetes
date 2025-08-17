@@ -87,53 +87,57 @@ kubectl auth – Check access rules (e.g., can-i)
 - patch → apply partial changes
 
 ### 3. Delete & clean up
+- delete → delete resources
+- drain → safely evict pods from a node
+- cordon / uncordon → mark node unschedulable / schedulable
 
-delete → delete resources
+### 4. Interact with pods/containers
+- exec → run command inside container
+- attach → attach to running process
+- port-forward → forward local port to pod/service
+- cp → copy files to/from containers
+- proxy → run local proxy to API server
+- run → start a pod (test/dev)
+- debug → create ephemeral debug container (>=1.18)
 
-drain → safely evict pods from a node
+### 5. Cluster & config
+- cluster-info → info about cluster
+- api-resources → list resource types
+- api-versions → list API versions
+- config → manage kubeconfig
+- auth → check access/RBAC (kubectl auth can-i)
+- version → client/server version
+- explain → docs for resources (kubectl explain pod.spec.containers)
 
-cordon / uncordon → mark node unschedulable / schedulable
+### 6. Rollout & workloads
+- rollout → manage deploy/DS/SS rollouts
+- status
+- history
+- undo
+- autoscale → HPA (horizontal pod autoscaler)
 
-4. Interact with pods/containers
+## 🔹 Common global flags (work almost anywhere)
 
-exec → run command inside container
+- `-n, --namespace <ns>` → target namespace
+- `-o yaml|json|wide|name` → output formats
+- `--kubeconfig <file>` → custom kubeconfig
+- `--context <name>` → pick context
+- `--dry-run=client|server` → preview only
+- `--force` → force some operations (delete, replace)
+- `--grace-period=0` → immediate termination
+- `--timeout=<duration>` → set operation timeout
+- `--field-selector` → filter by resource fields
+- `-l, --selector` → filter by labels
 
-attach → attach to running process
+ ## 🔹 Commands admins use often
+- `kubectl get events --sort-by=.lastTimestamp`
+- `kubectl explain <resource> --recursive`
+- `kubectl auth can-i create pods -n kube-system`
+- `kubectl config view --minify | grep namespace:`
+- `kubectl rollout undo deploy/<name> `
 
-port-forward → forward local port to pod/service
+## In Short
 
-cp → copy files to/from containers
-
-proxy → run local proxy to API server
-
-run → start a pod (test/dev)
-
-debug → create ephemeral debug container (>=1.18)
-
-5. Cluster & config
-
-cluster-info → info about cluster
-
-api-resources → list resource types
-
-api-versions → list API versions
-
-config → manage kubeconfig
-
-auth → check access/RBAC (kubectl auth can-i)
-
-version → client/server version
-
-explain → docs for resources (kubectl explain pod.spec.containers)
-
-6. Rollout & workloads
-
-rollout → manage deploy/DS/SS rollouts
-
-status
-
-history
-
-undo
-
-autoscale → HPA (horizontal pod autoscaler)
+- Top-level verbs = get, create, apply, delete, edit, describe, logs, exec, port-forward, rollout, scale, set, patch, label, annotate, auth, config, explain, top, drain, cordon, uncordon.
+- With subcommands for some (like rollout, set, config).
+- And flags that can be applied almost anywhere.
