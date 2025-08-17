@@ -13,15 +13,17 @@ version mismatch errors.
 
 <hr>
 
-# STEP TWO - ADD KERNEL MODULES
-# Let's load bridge netfilter module
-# This lets iptables inspect and filter traffic passing through 
-# Linux bridges (which Kubernetes CNIs use to connect pods).
-sudo modprobe br_netfilter
+### STEP TWO - ADD KERNEL MODULES
+Let's load bridge netfilter module
+This lets iptables inspect and filter traffic passing through 
+Linux bridges (which Kubernetes CNIs use to connect pods).
+<br>
+`sudo modprobe br_netfilter`
 
-# Let's load IP Virtual Server core modules
-# IPVS is a kernel-level load balancer.
-sudo modprobe iv_vs
+Let's load IP Virtual Server core modules
+IPVS is a kernel-level load balancer.
+<br>
+`sudo modprobe iv_vs`
 
 # Let's load the Round-Robin scheduler for IPVS.
 # Round Robin distributes connections evenly across all backend pods.
