@@ -2,9 +2,9 @@
 <br>
 
 📄 Get Information <br>
-
+```bash
 kubectl get – List resources (pods, services, deployments, etc.)
-
+<br>
 kubectl describe – Detailed info about a resource
 
 kubectl logs – View logs of a pod
