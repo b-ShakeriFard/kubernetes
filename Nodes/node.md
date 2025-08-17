@@ -45,6 +45,7 @@ Contents <br>
 | `kubectl get nodes -L role`                   | # show label column |
 | `kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints` | - |
 
-[!TIP]
+> 💡 **Tip:** You can use `git stash` to save your changes temporarily.
+
 Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
