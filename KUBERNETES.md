@@ -4,6 +4,12 @@
 kubectl [command] [TYPE] [NAME] [flags]
 ```
 
+[command] → verbs like get, describe, create …
+
+[TYPE] → resource type (pods, deployments, svc, cm, secrets …).
+
+[NAME] → specific resource name.
+
 ## 📄 Get Information <br>
 ```bash
 kubectl get – List resources (pods, services, deployments, etc.)
