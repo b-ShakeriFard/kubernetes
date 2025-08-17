@@ -1,9 +1,10 @@
-<h2> Pod Management </h2>
 
-<h4> Create a Pod </h4>
-
-### kubectl run <pod-name> --image=nginx --restart=Never
 # Pod management
+
+Simple command:
+```bash
+kubectl run <pod-name> --image=nginx --restart=Never
+```
 
 > Manage individual Pods for dev/test scenarios. For production, prefer Deployments/StatefulSets.
 
