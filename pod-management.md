@@ -91,10 +91,10 @@ kubectl debug <name> -it --image=busybox --target=<container>
 ```
 
 ### Pod Life Cycle
-```bash
+
 flowchart LR
   A[Pending] -->|Scheduled| B[Running]
   B -->|Probes ok| C[Ready]
   B -->|CrashLoop| D[Restarting]
   B -->|Delete| E[Terminating]
-```
+
