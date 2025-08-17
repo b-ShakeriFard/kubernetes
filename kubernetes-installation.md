@@ -1,13 +1,16 @@
-# this installation method has been tested on CentOS9
-# it works well!
+# Kubernetes Installatiom
+This installation method has been tested on CentOS9
+and it works well!
 
-# STEP ONE- INSTALL KERNEL HEADERS
+### STEP ONE- INSTALL KERNEL HEADERS
 
-# kernel-devel is the package that contains header files and source code needed to
-# build kernel modules. It’s a way to make sure your kernel headers match your 
-# currently running kernel so that module compilation succeeds without 
-# version mismatch errors.
-sudo dnf install kernel-devel-$(uname -r)
+kernel-devel is the package that contains header files and source code needed to
+build kernel modules. It’s a way to make sure your kernel headers match your 
+currently running kernel so that module compilation succeeds without 
+version mismatch errors.
+`sudo dnf install kernel-devel-$(uname -r)`
+
+<hr>
 
 # STEP TWO - ADD KERNEL MODULES
 # Let's load bridge netfilter module
