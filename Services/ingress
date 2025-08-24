@@ -1,7 +1,0 @@
-## Ingress management
-
-Most basic command:
-```bash
-# Creates a single host rule mapping "/" to a Service
-kubectl create ingress web --class=nginx \
-  --rule="app.example.com/=web-svc:80"
