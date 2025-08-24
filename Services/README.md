@@ -123,4 +123,11 @@ spec:
 
 5) targetPort must match a containerPort (number or name) that actually exists in the Pod template.
 
+> **Tips:**
+> Use kubectl expose for quick Services; then kubectl get svc -o yaml to learn the manifest.
+> Prefer named ports in Pods (e.g., name: http) and reference them via targetPort: http.
+> For sticky sessions: sessionAffinity: ClientIP (basic, cluster-internal).
+> For preserving the real client IP on LBs: externalTrafficPolicy: Local and ensure endpoints exist on the receiving node.
+
+
 ## TroubleShoot
