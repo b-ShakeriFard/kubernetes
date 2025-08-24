@@ -35,4 +35,6 @@ kubectl edit svc web-svc
 kubectl delete svc web-svc
 ```
 
-{!Tip}
+> **Tip: **
+Prefer named container ports and reference them in targetPort; this avoids breakage when you change port numbers.
+
