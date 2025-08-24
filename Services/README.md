@@ -124,10 +124,37 @@ spec:
 5) targetPort must match a containerPort (number or name) that actually exists in the Pod template.
 
 > **Tips:**
-> Use kubectl expose for quick Services; then kubectl get svc -o yaml to learn the manifest.
-> Prefer named ports in Pods (e.g., name: http) and reference them via targetPort: http.
-> For sticky sessions: sessionAffinity: ClientIP (basic, cluster-internal).
-> For preserving the real client IP on LBs: externalTrafficPolicy: Local and ensure endpoints exist on the receiving node.
+- Use kubectl expose for quick Services; then kubectl get svc -o yaml to learn the manifest.
+- Prefer named ports in Pods (e.g., name: http) and reference them via targetPort: http.
+- For sticky sessions: sessionAffinity: ClientIP (basic, cluster-internal).
+- For preserving the real client IP on LBs: externalTrafficPolicy: Local and ensure endpoints exist on the receiving node.
 
 
 ## TroubleShoot
+
+```bash
+# 1) Does the Service have endpoints?
+kubectl get svc web-svc -o wide
+kubectl get endpoints web-svc
+kubectl get endpointslice -l kubernetes.io/service-name=web-svc -o wide
+
+# 2) Do Pod labels match the Service selector?
+kubectl get pods -l app=web -o wide
+kubectl describe svc web-svc | sed -n '/Selector:/,/Endpoints:/p'
+
+# 3) Is the Pod Ready? (only Ready Pods are added)
+kubectl get pod -l app=web -o custom-columns=NAME:.metadata.name,READY:.status.containerStatuses[*].ready
+
+# 4) DNS inside the cluster
+kubectl run -it dnsutils --image=busybox:1.36 --restart=Never -- sh
+nslookup web-svc.default.svc.cluster.local
+wget -qO- http://web-svc.default.svc.cluster.local:80
+
+# 5) NodePort / LoadBalancer specifics
+kubectl get svc web-nodeport -o wide
+# Test from outside: curl http://<nodeIP>:<nodePort>
+kubectl describe svc web-lb
+# Check LB Ingress IP/hostname; verify provider/MetalLB status
+```
+> **Tip:**
+If endpoints look correct but traffic fails, inspect NetworkPolicies and Pod-level readiness/liveness probes (unhealthy Pods are removed from endpoints).
