@@ -47,8 +47,9 @@ Contents <br>
 | `kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints` | - |
 
 # Tips
-> 💡 **Tip:** 
-Typical maintenance flow: cordon → drain → (do work) → uncordon.
+> 💡 **Tip:**
+> [!TIP] 
+> Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
 
 # Examples
