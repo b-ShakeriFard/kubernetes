@@ -8,7 +8,7 @@ kubectl get nodes -o wide
 Contents <br>
 [Jump to:](#) <br> 
 • [Cheatsheet](#cheatsheet) <br>
-• [Tips](#) <br>
+• [Tips](#Tips) <br>
 • [Examples](#minimal-pod-yaml) <br>
 • [Warnings](#Warnings) <br>
 • [Troubleshooting](#troubleshooting) <br>
@@ -48,6 +48,8 @@ Contents <br>
 
 # Tips
 > 💡 **Tip:**
+
+<br>
 > [!TIP] 
 > Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
