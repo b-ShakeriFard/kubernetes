@@ -48,8 +48,10 @@ Contents <br>
 
 # Tips
 > 💡 **Tip:**
+Some say do or dont!
+> 
+<hr>
 
-<br>
 > [!TIP] 
 > Typical maintenance flow: cordon → drain → (do work) → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
