@@ -47,13 +47,9 @@ Contents <br>
 | `kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints` | - |
 
 # Tips
-> 💡 **Tip:**
-Some say do or dont!
-> 
-<hr>
 
 > [!TIP] 
-> Typical maintenance flow: cordon → drain → (do work) → uncordon.
+> Typical maintenance flow: **cordon** → **drain** → **(do work)** → uncordon.
 Pair labels (on nodes) with nodeSelector/affinity (in Pods) for intentional placement.
 
 # Examples
@@ -84,3 +80,77 @@ spec:
 <br>
 
 - 2) Safe node maintenance
+
+```bash
+kubectl cordon worker-1
+kubectl drain worker-1 --ignore-daemonsets --delete-emptydir-data --grace-period=60 --timeout=10m
+# ...patch/upgrade node...
+kubectl uncordon worker-1
+```
+
+- 3) Quick condition/pressure checks
+
+```bash
+kubectl get node <node> -o jsonpath='{.status.conditions[*].type}{"\n"}{.status.conditions[*].status}{"\n"}'
+kubectl describe node <node> | sed -n '/Conditions:/,$p' | head -n 40
+```
+
+- 4) Targeted scheduling (affinity, richer than nodeSelector)
+
+```bash
+spec:
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: workload
+            operator: In
+            values: ["api","web"]
+```
+
+<hr>
+
+# Warnings
+
+[!WARNING]
+- kubectl drain can hang if PodDisruptionBudgets block evictions. Check kubectl get pdb -A.
+
+- Draining control-plane nodes can disrupt the cluster; understand scheduling and static Pods before proceeding.
+
+- Deleting a Node (kubectl delete node <node>) removes it from the API, not the machine. If re-provisioning, also reset kubelet/kubeadm on the host.
+
+- Node objects are kubelet-managed; avoid editing fields other than labels and taints.
+
+<hr>
+
+# Troubleshoot
+
+```bash
+# 1) Health & pressure signals
+kubectl describe node <node> | sed -n '/Conditions:/,$p'
+# Look for: Ready, MemoryPressure, DiskPressure, PIDPressure, NetworkUnavailable
+
+# 2) Capacity vs allocatable (scheduling headroom)
+kubectl get node <node> -o jsonpath='{.status.capacity}{"\n"}{.status.allocatable}{"\n"}'
+
+# 3) Pods stuck on node (why drain fails)
+kubectl get pods -A --field-selector spec.nodeName=<node> -o wide
+kubectl get pdb -A
+
+# 4) Taints/labels sanity
+kubectl get nodes -o custom-columns=NAME:.metadata.name,TAINTS:.spec.taints
+kubectl get nodes -L role,workload
+
+# 5) Quick metrics (needs metrics-server)
+kubectl top node
+```
+
+[!TIP]
+For deep host debugging, use ephemeral node debug:
+
+```bash
+kubectl debug node/<node> -it --image=busybox
+# then (optional) chroot into host filesystem if your cluster supports it
+```
+
